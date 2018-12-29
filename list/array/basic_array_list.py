@@ -5,12 +5,10 @@
 class ArrayList :
     # ArrayList 생성자
     # Merge 연산을 위하여 파라미터 일부 조정
+    # 할당 ArrayList 길이 : size, 실제 ArrayList 길이 : capacity
     def __init__(self, size, capacity=0, data=None) :
-        # 할당 ArrayList 길이
         self.size = size
-        # 실제 ArrayList 길이
         self.capacity = capacity
-        # ArrayList 데이터 목록
         self.data = [None] * size if data == None else data
 
     # 각 멤버 변수 별 Setter 작성
@@ -114,41 +112,57 @@ class ArrayList :
 
         return -1
 
-    # ArrayList __add__ 메소드. ArrayList 끼리 융합하기 위한 연산자 오버로딩
+    # ArrayList __add__ 메소드. ArrayList 끼리 Merge 시키기 위한 연산자 오버로딩
     def __add__(self, another) :
-        tmp_size = self.size + another.get_size()
-        tmp_array_list = ArrayList(tmp_size)
-    
-        my_data = self.data
-        ano_data = another.data
-        
-        for k in my_data :
-            if k != None :
-                tmp_array_list.add_first(k)
-            else : 
-                break
-        
-        for k in ano_data :
-            if k != None :
-                tmp_array_list.add_first(k)
-            else : 
-                break
+        try :
+            if isinstance(another, ArrayList) :
+                tmp_size = self.size + another.get_size()
+                tmp_array_list = ArrayList(tmp_size)
+            
+                my_data = self.data
+                ano_data = another.data
+                
+                for k in my_data :
+                    if k != None :
+                        tmp_array_list.add_first(k)
+                    else : 
+                        break
+                
+                for k in ano_data :
+                    if k != None :
+                        tmp_array_list.add_first(k)
+                    else : 
+                        break
 
-        return tmp_array_list
+                return tmp_array_list
+            
+            else :
+                raise ArithmeticError('피연산자의 주체가 ArrayList 가 아닙니다.')
+        
+        except ArithmeticError as exc :
+            print('예외 발생 : {}'.format(str(exc)))
     
-    # ArrayList __sub__ 메소드. ArrayList 차집합(Minus) 을 위한 연산자 오버라이딩
+    # ArrayList __sub__ 메소드. ArrayList 차집합(Minus) 을 위한 연산자 오버로딩
     def __sub__(self, another) :
-        my_data = self.data
-        ano_data = another.data
+        try :
+            if isinstance(another, ArrayList) :
+                ano_data = another.data
+                tmp_array_list = ArrayList(self.get_size(), self.get_capacity(), self.get_data())
+                
+                for (idx, k) in enumerate(tmp_array_list.get_data()) :
+                    for l in ano_data :
+                        if l == None :
+                            break
+                        if k == l :
+                            tmp_array_list.remove_data(tmp_array_list.index_of(l))
 
-        for (idx, k) in enumerate(my_data) :
-            for l in ano_data :
-                if l == None :
-                    break
-                if k == l :
-                    self.remove_data(self.index_of(l))
-
-        return self
+                return tmp_array_list
+            
+            else :
+                raise ArithmeticError('피연산자의 주체가 ArrayList 가 아닙니다.')
+        
+        except ArithmeticError as exc :
+            print('예외 발생 : {}'.format(str(exc)))
 
     # ArrayList __str__ 메소드
     def __str__(self) :
@@ -234,6 +248,10 @@ array_list3.add_last(25)
 print(array_list3) # [ 5 15 25 - - - ][Capacity : 3] 길이가 2배로 늘어납니다.
 
 print(array_list2 + array_list3) # [ 20 10 5 15 25 - - - - - ][Capacity : 5]
+print(array_list2) # [ 20 10 - - ][Capacity : 2] 원래 값들은 그대로 유지되고, 객체에 대한 연산의 결과만 반환 시켰습니다.
+
+# 피연산자가 ArrayList 가 아니면 예외 처리합니다.
+array_list2 + 20 # 예외 발생 : 피연산자의 주체가 ArrayList 가 아닙니다.
 
 # Case 05. ArrayList Minus 연산 테스트
 
@@ -251,3 +269,9 @@ for l in range(20, 220, 20) :
 print(array_list5) # [ 20 40 60 80 100 120 140 160 180 200 - - - - - - - - - - ][Capacity : 10]
 
 print(array_list4 - array_list5) # [ 90 70 50 30 10 ][Capacity : 5]
+
+# 원래 값들은 그대로 유지되고, 객체에 대한 연산의 결과만 반환 시켰습니다.
+print(array_list4) # [ 90 80 70 60 50 40 30 20 10 - - - - - - - - - - - ][Capacity : 10]
+
+# 피연산자가 ArrayList 가 아니면 예외 처리합니다.
+array_list4 + 20 # 예외 발생 : 피연산자의 주체가 ArrayList 가 아닙니다.
