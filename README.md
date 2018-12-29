@@ -20,7 +20,7 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
         - 데이터 추가(Head, Tail, Index) 구현.
         - 데이터 삭제(Head, Tail, Index) 구현.
         - Contains 메소드 구현.
-        - Merge 기능 구현. (연산자 오버로드 사용.)
+        - Merge, Minus 기능 구현. (연산자 오버로드 사용.)
         - Copy, Deep Copy 메소드 구현. (연산자 오버로드에서 유용하게 사용됨.)
     2. Circular Linked List
         (구현 예정)

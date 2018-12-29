@@ -123,13 +123,13 @@ class ArrayList :
                 ano_data = another.data
                 
                 for k in my_data :
-                    if k != None :
+                    if k is not None :
                         tmp_array_list.add_first(k)
                     else : 
                         break
                 
                 for k in ano_data :
-                    if k != None :
+                    if k is not None :
                         tmp_array_list.add_first(k)
                     else : 
                         break
@@ -151,7 +151,7 @@ class ArrayList :
                 
                 for (idx, k) in enumerate(tmp_array_list.get_data()) :
                     for l in ano_data :
-                        if l == None :
+                        if l is None :
                             break
                         if k == l :
                             tmp_array_list.remove_data(tmp_array_list.index_of(l))
@@ -169,7 +169,7 @@ class ArrayList :
         tmp_list = self.data
         result_str = ''
         for i in tmp_list :
-            if i != None :
+            if i is not None :
                 result_str += '{} '.format(i)
             else :
                 result_str += '{} '.format('-')

@@ -27,7 +27,7 @@ class Node :
     # Node __str__ 메소드. 마지막 값(즉, next 가 참조하는 값이 없다면) 은 화살표를 없애고 표기합니다.
     # 이외의 값들은 화살표를 붙어줍니다.
     def __str__(self) :
-        if self.next == None :
+        if self.next is None :
             return '{} '.format(self.data)
         else :
             return '{} -> '.format(self.data)
@@ -38,7 +38,7 @@ class SingleLinkedList :
     # 여기서 capacity 는 연결 리스트의 길이입니다.
     def __init__(self, root=None, capacity=0) :
         self.root = root
-        self.capacity = 0 if root == None else capacity
+        self.capacity = 0 if root is None else capacity
 
     # 맴버 변수 별 setter, getter 메소드
     def set_root(self, root) :
@@ -64,6 +64,7 @@ class SingleLinkedList :
     def add_tail(self, value) :
         if self.capacity == 0 :
             self.add_head(value)
+            return
 
         tmp_node = self.root
 
@@ -84,6 +85,7 @@ class SingleLinkedList :
                 return
             else :
                 self.add_head(value)
+
         else :
             if idx < 0 or idx > self.capacity :
                 print('유효하지 않은 인덱스를 입력했습니다. 인덱스는 0부터 {} 까지 입력 바랍니다.'.format(self.capacity))
@@ -95,7 +97,7 @@ class SingleLinkedList :
                     self.add_tail(value)
                 else :
                     new_node = Node(value)
-                    prev_node = self.find_by_idx(idx - 1)
+                    prev_node = self.find_by_idx_node(idx - 1)
                     tmp_node = prev_node.get_next()
                     new_node = Node(value, tmp_node)
                     prev_node.set_next(new_node)
@@ -146,15 +148,15 @@ class SingleLinkedList :
                 elif idx == self.capacity - 1 :
                     self.remove_tail()
                 else :
-                    prev_node = self.find_by_idx(idx - 1)
+                    prev_node = self.find_by_idx_node(idx - 1)
                     tmp_node = prev_node.get_next()
                     prev_node.set_next(tmp_node.get_next())
                     self.capacity -= 1
         
     # 연결 리스트 인덱스로 찾는 메소드
-    def find_by_idx(self, idx) :
+    def find_by_idx_node(self, idx) :
         tmp_node = self.root
-        if tmp_node != None :
+        if tmp_node is not None :
             if idx < 0 or idx >= self.capacity :
                 print('유효하지 않은 인덱스를 입력했습니다. 인덱스는 0부터 {} 까지 입력 바랍니다.'.format(self.capacity - 1))
                 return None
@@ -169,6 +171,25 @@ class SingleLinkedList :
         else :
             return None
     
+    # 연결 리스트 데이터로 찾는 메소드
+    def find_by_value_idx(self, value) :
+        tmp_node = self.root
+        
+        if tmp_node is None :
+            return -1
+        
+        else :
+            idx = 0
+
+            while tmp_node is not None :
+                if tmp_node.get_data() == value :
+                    return idx
+                else :
+                    tmp_node = tmp_node.get_next()
+                    idx += 1
+            
+            return -1
+
     # Single Linked List contains 메소드
     def contains(self, value) :
         tmp_node = self.root
@@ -203,9 +224,9 @@ class SingleLinkedList :
         try :
             if isinstance(another, SingleLinkedList) :
                 tmp_list = deepcopy(self)
-                tmp_fnode = tmp_list.find_by_idx(tmp_list.get_capacity() - 1)
+                tmp_fnode = tmp_list.find_by_idx_node(tmp_list.get_capacity() - 1)
 
-                if tmp_fnode != None :
+                if tmp_fnode is not None :
                     tmp_fnode.set_next(another.get_root())
                 else :
                     tmp_list.set_root(another.get_root())
@@ -218,8 +239,31 @@ class SingleLinkedList :
         
         except ArithmeticError as exc :
             print('예외 발생 : {}'.format(str(exc)))
-
+    
     # LinkedList __sub__ 메소드. LinkedList 끼리 Minus 시키기 위한 연산자 오버로딩
+    def __sub__(self, another) :
+        try :
+            if isinstance(another, SingleLinkedList) :
+                tmp_list = deepcopy(self)
+                tmp_node = tmp_list.get_root()
+
+                if tmp_node is not None :
+                    while tmp_node is not None :
+                        if another.contains(tmp_node.get_data()) :
+                            tmp_idx = tmp_list.find_by_value_idx(tmp_node.get_data())
+                            if tmp_idx != -1 :
+                                tmp_list.remove_data(tmp_idx)
+
+                        tmp_node = tmp_node.get_next()
+
+                return tmp_list
+
+            else :
+                raise ArithmeticError('피연산자의 주체가 SingleLinkedList 가 아닙니다.')
+        
+        except ArithmeticError as exc :
+            print('예외 발생 : {}'.format(str(exc)))
+    
     # Single Linked List __str__ 메소드
     def __str__(self) :
         tmp_node = self.root
@@ -268,17 +312,23 @@ print(single_link_list1.contains(10)) # True
 print(single_link_list1.contains(20)) # True 
 print(single_link_list1.contains(18)) # False
 
-# Case 03. Find By Index Test
+# Case 03_1. Find By Index Test
 
-tmp_second_node = single_link_list1.find_by_idx(2)
+tmp_second_node = single_link_list1.find_by_idx_node(2)
 
-if tmp_second_node != None :
+if tmp_second_node is not None :
     print(tmp_second_node.get_data()) # 15
 
-tmp_sixth_node = single_link_list1.find_by_idx(6)
+tmp_sixth_node = single_link_list1.find_by_idx_node(6)
 
-if tmp_sixth_node != None :
-     print(tmp_sixth_node.get_data()) # ...
+if tmp_sixth_node is not None :
+    print(tmp_sixth_node.get_data()) # ...
+
+# Case 03_2. Find By Value To Index Test
+
+print(single_link_list1.find_by_value_idx(15)) # 2
+print(single_link_list1.find_by_value_idx(25)) # 4
+print(single_link_list1.find_by_value_idx(35)) # -1
 
 # Case 04_1. Remove Head Test
 
@@ -323,3 +373,21 @@ print(single_link_list3) # [ 30 -> 40 ] [Capacity : 2]
 
 # 피연산자가 Single Linked List 가 아니면 예외 처리합니다.
 single_link_list4 + 5 # 예외 발생 : 피연산자의 주체가 SingleLinkedList 가 아닙니다.
+
+# Case 06. Linked List Minus Test
+
+single_twice_list = SingleLinkedList()
+single_triple_list = SingleLinkedList()
+
+for k in range(2, 22, 2) :
+    single_twice_list.add_tail(k)
+
+single_twice_list.add_tail(12)
+
+for k in range(3, 33, 3) :
+    single_triple_list.add_tail(k)
+
+print(single_twice_list) # [ 2 -> 4 -> 6 -> 8 -> 10 -> 12 -> 14 -> 16 -> 18 -> 20 -> 12 ] [Capacity : 11]
+print(single_triple_list) # [ 3 -> 6 -> 9 -> 12 -> 15 -> 18 -> 21 -> 24 -> 27 -> 30 ] [Capacity : 10]
+print(single_twice_list - single_triple_list) # [ 2 -> 4 -> 8 -> 10 -> 14 -> 16 -> 20 ] [Capacity : 7]
+print(single_twice_list) # [ 2 -> 4 -> 6 -> 8 -> 10 -> 12 -> 14 -> 16 -> 18 -> 20 -> 12 ] [Capacity : 11]
