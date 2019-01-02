@@ -6,7 +6,7 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
 
 ## Contexts
 
-1. ArrayList
+1. Array List
    
     1. Basic Array List
         - 데이터 추가, 삭제 메소드 구현.
@@ -15,8 +15,10 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
         - Merge, Minus 기능 구현. (연산자 오버로드 사용)
 
     2. Circular Queue
+        - enQueue, deQueue 메소드 구현.
+        - isFull, isEmpty 메소드 구현.
 
-2. LinkedList
+2. Linked List
    
     1. Single Linked List
         - 데이터 추가(Head, Tail, Index) 구현.
@@ -50,15 +52,21 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
     2. Node Map Graph
     3. Array Weight Graph
     4. Node Weight Graph
-   
-7. Hash Table
 
-8. Sorting
+7. Graph Algorithm
+    1. Kruskal Algorithm
+    2. Prim Algorithm
+    3. Dijkstra Algorithm
+    4. A* Algorithm
+   
+8. Hash Table
+
+9. Sorting
     1. O(n2) Sorting
     2. O(nlogn) Sorting
     3. Radix Sorting
 
-9. String
+10. String
     1. KMP Algorithm
 
 ## Author
