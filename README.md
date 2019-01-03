@@ -15,8 +15,12 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
         - Merge, Minus 기능 구현. (연산자 오버로드 사용)
 
     2. Circular Queue
-        - enQueue, deQueue 메소드 구현.
+        - enQueue, deQueue 메소드 구현. 
+            - 삽입 시작하는 경우, 삭제 중 empty 인 경우 각각 front, rear 변수 초기화를 진행하여 문제를 최소화 하였음.
         - isFull, isEmpty 메소드 구현.
+        - Contains 메소드 구현.
+        - Merge, Minus 기능 구현. (연산자 오버로드 사용)
+        - Deep Copy 메소드 구현. (연산자 오버로드에서 필요함.)
 
 2. Linked List
    
@@ -25,7 +29,7 @@ Python 을 이용한 자료구조 개념 복습 저장소 입니다!
         - 데이터 삭제(Head, Tail, Index) 구현.
         - Contains 메소드 구현.
         - Merge, Minus 기능 구현. (연산자 오버로드 사용.)
-        - Copy, Deep Copy 메소드 구현. (연산자 오버로드에서 유용하게 사용됨.)
+        - Copy, Deep Copy 메소드 구현. (연산자 오버로드에서 필요함.)
 
     2. Circular Linked List
         (구현 예정)
