@@ -11,7 +11,7 @@ def fetch_property_index(prop_key) :
 
     if result :
         return {
-            'r' : int(result.group(1)), 'c' : int(result.group(2))
+            'ROW' : int(result.group(1)), 'COL' : int(result.group(2))
         }
     else :
         return None
@@ -43,33 +43,72 @@ class SparseMatrix :
             tmp_idx = fetch_property_index(k)
             
             if tmp_idx is not None :
-                max_row = max(max_row, tmp_idx['r'])
-                max_col = max(max_col, tmp_idx['c'])
+                max_row = max(max_row, tmp_idx['ROW'])
+                max_col = max(max_col, tmp_idx['COL'])
 
         return {
-            'r' : max_row + 1, 'c' : max_col + 1
+            'ROW' : max_row + 1, 'COL' : max_col + 1
         }
 
-    def sort_by_idx_and_unit(self, idx, unit) :
-        if type(idx) == int and unit in ('ROW', 'COL', ) :
-            print(idx)
-            print(unit)
+    def sort_by_idx_and_unit(self, idx, unit, oper) :
+        if type(idx) == int and unit in ('ROW', 'COL', ) and oper in ('ASC', 'DESC', ) :
             tmp_obj = self.obj
             mat_size = self.fetch_matrix_size()
+            pivot_data = []
+            pivot_reg = None
+
+            if unit == 'COL' :
+                pivot_reg = re.compile('matrix_{}_\d+'.format(idx))
 
             if unit == 'ROW' :
-                tmp_reg = re.compile('matrix_{}_\d+'.format(idx))
+                pivot_reg = re.compile('matrix_\d+_{}'.format(idx))
             
-            if unit == 'COL' :
-                tmp_reg = re.compile('matrix_\d+_{}'.format(idx))
- 
+            for k in tmp_obj.keys() :
+                res = pivot_reg.match(k)
+                if res :
+                    if res.group(0) == k :
+                        idx = fetch_property_index(k)
+                        pivot_data.append({
+                            'key' : idx[unit], 'data' : tmp_obj[k]
+                        })
+
+            if len(pivot_data) != mat_size[unit] :
+                return
+
+            new_mat = {}
+            pivot_data.sort(key = lambda obj : obj['data'], reverse = True if oper == 'DESC' else False)
+            for seq, pivot in enumerate(pivot_data) :
+                data_reg = None
+                if unit == 'COL' :
+                    data_reg = re.compile('matrix_\d+_{}'.format(pivot['key']))
+
+                if unit == 'ROW' :
+                    data_reg = re.compile('matrix_{}_\d+'.format(pivot['key']))
+
+                for k in tmp_obj.keys() :
+                    res = data_reg.match(k)
+                    if res :
+                        if res.group(0) == k :
+                            cur_idx = fetch_property_index(k)
+                            assign_idx = ''
+
+                            if unit == 'ROW' :
+                                assign_idx = 'matrix_{}_{}'.format(seq, cur_idx['COL'])
+
+                            if unit == 'COL' :
+                                assign_idx = 'matrix_{}_{}'.format(cur_idx['ROW'], seq)
+
+                            new_mat[assign_idx] = tmp_obj[k]
+
+            self.obj = new_mat
+
     def __str__(self) :
         tmp_obj = self.obj
         mat_size = self.fetch_matrix_size()
 
         tmp_str = ''
-        for k in range(0, mat_size['r']) :
-            for l in range(0, mat_size['c']) :
+        for k in range(0, mat_size['ROW']) :
+            for l in range(0, mat_size['COL']) :
                 tmp_idx = 'matrix_{}_{}'.format(k, l)
                 
                 if tmp_idx in tmp_obj :
@@ -77,7 +116,7 @@ class SparseMatrix :
                 else :
                     tmp_str += '- '
 
-            if k != mat_size['r'] - 1 :
+            if k != mat_size['ROW'] - 1 :
                 tmp_str += '\n'
 
         return tmp_str
@@ -132,4 +171,30 @@ print(sparse_matrix_1)
 # - 4 -
 # - 21 -
 
-sparse_matrix_1.sort_by_idx_and_unit(1, 'COL')
+sparse_matrix_1.assign_value('matrix_1_0', 90)
+sparse_matrix_1.assign_value('matrix_3_2', 3)
+print(sparse_matrix_1)
+
+# 10 30 31 
+# 90 10 41
+# - 20 -
+# - 4 3
+# - 21 - 
+
+sparse_matrix_1.sort_by_idx_and_unit(1, 'COL', 'ASC')
+print(sparse_matrix_1)
+
+# 30 31 10
+# 10 41 90
+# 20 - -
+# 4 3 -
+# 21 - -
+
+sparse_matrix_1.sort_by_idx_and_unit(0, 'ROW', 'ASC')
+print(sparse_matrix_1)
+
+# 4 3 -
+# 10 41 90
+# 20 - -
+# 21 - -
+# 30 31 10
