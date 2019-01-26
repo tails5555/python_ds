@@ -90,4 +90,13 @@ class CircularLinkedList :
 
         self.capacity += 1
 
-    
+    # 순환 연결 리스트 __str__ 오버라이딩 메소드
+    def __str__(self) :
+        tmp_root = self.root
+        return ''
+
+circular_linked_list1 = CircularLinkedList()
+
+circular_linked_list1.add_head(10)
+print(circular_linked_list1)
+

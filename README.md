@@ -1,6 +1,6 @@
-# Python Data Structure
+# Python Data Structure Repository
 
-Python 을 이용한 자료구조 개념 복습 저장소 입니다!
+Python 에 익숙해지기 위한 저장소 입니다!
 
 그리고 각 자료구조에 따른 알고리즘 개념 복습 저장소 이기도 합니다.
 
