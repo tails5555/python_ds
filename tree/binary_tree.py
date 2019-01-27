@@ -13,6 +13,9 @@ class Node :
 
     def get_right(self) :
         return self.right
+
+    def get_value(self) :
+        return self.value
     
     def create_left_child(self, value) :
         tmp_lev = self.level
@@ -115,6 +118,27 @@ class Tree :
         else :
             print('명령어는 L, R 로만 작성하시길 바랍니다.')
 
+    def contains(self, value) :
+        if self.root is not None :
+            tmp_node = self.root
+            stack = []
+            stack.append(tmp_node)
+            
+            while len(stack) > 0 :
+                tmp = stack.pop()
+                
+                if tmp.get_value() == value :
+                    return True
+
+                if tmp.get_left() is not None :
+                    stack.append(tmp.get_left())
+
+                if tmp.get_right() is not None :
+                    stack.append(tmp.get_right())
+            
+        return False
+        
+
 #           A
 #       B       C 
 #     D   E       F
@@ -206,4 +230,23 @@ if __name__ == '__main__' :
         None - I - None (Level. 3)
         None - J - None (Level. 3)
         None - K - None (Level. 3)
+    """
+
+    for k in 'ABCDEFGHIJKLM' : # contains 함수를 DFS 를 사용해서 구현하였습니다.
+        print(k, tree_1.contains(k))
+
+    """
+    A True
+    B True
+    C True
+    D True
+    E True
+    F True
+    G True
+    H True
+    I True
+    J True
+    K True
+    L False
+    M False
     """

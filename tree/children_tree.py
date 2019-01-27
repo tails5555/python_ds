@@ -61,6 +61,24 @@ class ChildrenTree :
 
             for child in tmp.get_children() :
                 queue.insert(0, child)
+    
+    def contains(self, value) :
+        if self.root is not None :
+            tmp_node = self.root
+
+            stack = []
+            stack.append(tmp_node)
+
+            while len(stack) > 0 :
+                tmp = stack.pop()
+
+                if tmp.get_value() == value :
+                    return True
+                
+                for child in tmp.get_children() :
+                    stack.append(child)
+
+        return False
 
     def create_by_command(self, command, value, node) :
         tmp_len = len(command)
@@ -135,7 +153,7 @@ if __name__ == '__main__' :
     """
 
     print('-- Breadth First Search Testing --')
-    children_tree1.bfs(children_tree1.get_root()) # A - M
+    children_tree1.bfs(children_tree1.get_root()) # A to M
 
     """
     A [Lv. 0] At Children : B - C - D
@@ -151,4 +169,24 @@ if __name__ == '__main__' :
     K [Lv. 3] No Children
     L [Lv. 3] No Children
     M [Lv. 3] No Children
+    """
+
+    for a in 'ABCDEFGHIJKLMN' :
+        print(a, children_tree1.contains(a))
+
+    """
+    A True
+    B True
+    C True
+    D True
+    E True
+    F True
+    G True
+    H True
+    I True
+    J True
+    K True
+    L True
+    M True
+    N False
     """
